@@ -106,7 +106,7 @@ const canTakeMedicine = computed(() => {
 
       // Can only take if it's been 2+ hours since meal
       if (hoursSinceMeal < 2) {
-        const progressPercentage = Math.floor((hoursSinceMeal / 2) * 100);
+        const progressPercentage = Math.max(0, Math.floor((hoursSinceMeal / 2) * 100));
         return {
           allowed: false,
           reason: "Too soon after eating",
@@ -136,7 +136,7 @@ const canTakeMedicine = computed(() => {
       return { allowed: true, reason: "Ready for next dose", progress: 100 };
     }
 
-    const progressPercentage = Math.floor((hoursSinceMeal / 2) * 100);
+    const progressPercentage = Math.max(0, Math.floor((hoursSinceMeal / 2) * 100));
     return {
       allowed: false,
       reason: "Too soon after eating",
