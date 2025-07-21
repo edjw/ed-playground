@@ -15,6 +15,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@auth0/auth0-vue": "^2.4.0",
     "@netlify/vite-plugin": "^2.4.5",
     "@tailwindcss/vite": "^4.1.11",
     "pinia": "^3.0.3",
@@ -23,9 +24,11 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@netlify/functions": "^4.1.13",
     "@playwright/test": "^1.53.1",
     "@tsconfig/node22": "^22.0.2",
     "@types/jsdom": "^21.1.7",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.15.32",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vitest/eslint-plugin": "^1.2.7",
@@ -38,6 +41,8 @@
     "eslint-plugin-vue": "~10.2.0",
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.5.3",
     "typescript": "~5.8.0",
