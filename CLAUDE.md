@@ -24,6 +24,8 @@ pnpm run dev
 - Vue Router
 - Netlify integration with local emulation
 - Vue DevTools integration
+- ShadCN Vue for components
+- Lucide Icons
 
 ### Testing
 
@@ -40,3 +42,4 @@ pnpm run dev
 - Server starts on port 5173 by default
 - Vue DevTools available at <http://localhost:5173/__devtools__/>
 - Netlify features are emulated locally (blobs, edge functions, environment variables, etc.)
+- Use Context7 to get documentation
