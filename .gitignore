@@ -34,3 +34,4 @@ playwright-report/
 
 # Local Netlify folder
 .netlify
+dev.pid
