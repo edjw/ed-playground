@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+console.log("HomeView component loaded");
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <h1 class="text-3xl font-bold underline bg-blue-200">Welcome to the Home Page</h1>
   </main>
 </template>
