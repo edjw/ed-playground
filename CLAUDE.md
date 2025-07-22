@@ -12,9 +12,9 @@ pnpm run dev
 
 - **Framework**: Vite with Vue 3
 - **Default Port**: 5173
-- **Dev Command**: `pnpm run dev`
-- **Build Command**: `pnpm run build`
-- **Type Check**: `pnpm run type-check`
+- **Dev Command**: `pnpm dev:netlify`
+- **Build Command**: `pnpm build`
+- **Type Check**: `pnpm type-check`
 
 ### Key Features
 
@@ -29,13 +29,13 @@ pnpm run dev
 
 ### Testing
 
-- **Unit Tests**: `pnpm run test:unit` (Vitest)
-- **E2E Tests**: `pnpm run test:e2e` (Playwright)
+- **Unit Tests**: `pnpm test:unit` (Vitest)
+- **E2E Tests**: `pnpm test:e2e` (Playwright)
 
 ### Code Quality
 
-- **Lint**: `pnpm run lint`
-- **Format**: `pnpm run format`
+- **Lint**: `pnpm lint`
+- **Format**: `pnpm format`
 
 ### Development Notes
 
@@ -43,3 +43,7 @@ pnpm run dev
 - Vue DevTools available at <http://localhost:5173/__devtools__/>
 - Netlify features are emulated locally (blobs, edge functions, environment variables, etc.)
 - Use Context7 to get documentation
+- Use ShadCN for components
+- Use VueUse for composables and common functions like date formatting, dialogs etc (<https://vueuse.org/functions.html>)
+- Use Lucide for icons
+- Use Netlify Blobs for simple data storage even in dev mode thanks to "@netlify/vite-plugin". See `useMedicineData` composable for example.
