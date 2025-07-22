@@ -14,7 +14,7 @@ pnpm run dev
 - **Default Port**: 5173
 - **Dev Command**: `pnpm dev:netlify`
 - **Build Command**: `pnpm build`
-- **Type Check**: `pnpm type-check`
+- **Type Check**: `pnpm type-check` not `pnpm run type-check`
 
 ### Key Features
 
