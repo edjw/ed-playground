@@ -15,6 +15,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@netlify/blobs": "^10.0.6",
     "@netlify/vite-plugin": "^2.4.5",
     "@tailwindcss/vite": "^4.1.11",
     "@vueuse/core": "^13.5.0",

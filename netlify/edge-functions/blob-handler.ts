@@ -1,6 +1,7 @@
 import type { Context } from "@netlify/edge-functions";
+import { getStore } from "@netlify/blobs";
 
-export default async (request: Request, context: Context) => {
+export default async (request: Request, _context: Context) => {
 	const url = new URL(request.url);
 	const path = url.pathname;
 
@@ -9,8 +10,7 @@ export default async (request: Request, context: Context) => {
 		return new Response("Not Found", { status: 404 });
 	}
 
-	const { blobs } = context;
-	const store = blobs.getStore("medicine-data-store");
+	const store = getStore("medicine-data-store");
 
 	try {
 		if (request.method === "PUT") {
