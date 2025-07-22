@@ -6,10 +6,14 @@ export default async (req: Request, context: { params: { store: string; key: str
   // CORS headers and origin check
   const origin = req.headers.get('origin');
   const referer = req.headers.get('referer');
-  const allowedOrigin = 'https://ed-playground.netlify.app';
+  const allowedOrigins = [
+    'https://ed-playground.netlify.app',
+    'http://localhost:8888',
+    'http://localhost:5173'
+  ];
   
   const corsHeaders = {
-    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Origin": origin || "http://localhost:8888",
     "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json"
@@ -21,7 +25,11 @@ export default async (req: Request, context: { params: { store: string; key: str
   }
 
   // Check origin/referer for security
-  if (origin !== allowedOrigin && !referer?.startsWith(allowedOrigin + '/')) {
+  const isAllowedOrigin = allowedOrigins.some(allowed => 
+    origin === allowed || referer?.startsWith(allowed + '/')
+  );
+  
+  if (!isAllowedOrigin) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403,
       headers: corsHeaders
