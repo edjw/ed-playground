@@ -272,9 +272,9 @@ const startEditMealTime = () => {
   const now = new Date();
   if (lastMealTime.value) {
     const date = new Date(lastMealTime.value);
-    tempMealTime.value = date.toISOString().slice(0, 16);
+    tempMealTime.value = useDateFormat(date, 'YYYY-MM-DDTHH:mm').value;
   } else {
-    tempMealTime.value = new Date(now.getTime() - 30 * 60000).toISOString().slice(0, 16); // 30 minutes ago
+    tempMealTime.value = useDateFormat(new Date(now.getTime() - 30 * 60000), 'YYYY-MM-DDTHH:mm').value; // 30 minutes ago
   }
   editingMealTime.value = true;
 };
@@ -283,9 +283,9 @@ const startEditMedicineTime = () => {
   const now = new Date();
   if (lastMedicineTime.value) {
     const date = new Date(lastMedicineTime.value);
-    tempMedicineTime.value = date.toISOString().slice(0, 16);
+    tempMedicineTime.value = useDateFormat(date, 'YYYY-MM-DDTHH:mm').value;
   } else {
-    tempMedicineTime.value = new Date(now.getTime() - 60 * 60000).toISOString().slice(0, 16); // 1 hour ago
+    tempMedicineTime.value = useDateFormat(new Date(now.getTime() - 60 * 60000), 'YYYY-MM-DDTHH:mm').value; // 1 hour ago
   }
   editingMedicineTime.value = true;
 };
