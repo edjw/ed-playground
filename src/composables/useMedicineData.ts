@@ -1,5 +1,4 @@
 import { ref } from "vue";
-import { getStore } from "@netlify/blobs";
 
 export interface MedicineData {
   lastMealTime: string;
@@ -15,11 +14,16 @@ export function useMedicineData() {
     error.value = null;
 
     try {
-      const store = getStore({ 
-        name: "medicine-data",
-        siteID: import.meta.env.VITE_NETLIFY_SITE_ID 
+      const response = await fetch("/api/blobs/medicine-data/data/set", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
       });
-      await store.setJSON("data", data);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to save data");
+      }
     } catch (err) {
       error.value = err instanceof Error ? err.message : "Failed to save data";
       console.error("Save error:", err);
@@ -33,12 +37,15 @@ export function useMedicineData() {
     error.value = null;
 
     try {
-      const store = getStore({ 
-        name: "medicine-data",
-        siteID: import.meta.env.VITE_NETLIFY_SITE_ID 
-      });
-      const data = await store.get("data", { type: "json" });
-      return data as MedicineData | null;
+      const response = await fetch("/api/blobs/medicine-data/data/get");
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to load data");
+      }
+
+      const data = await response.json();
+      return data;
     } catch (err) {
       error.value = err instanceof Error ? err.message : "Failed to load data";
       console.error("Load error:", err);
