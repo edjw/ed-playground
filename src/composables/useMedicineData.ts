@@ -15,7 +15,10 @@ export function useMedicineData() {
     error.value = null;
 
     try {
-      const store = getStore("medicine-data");
+      const store = getStore({ 
+        name: "medicine-data",
+        siteID: import.meta.env.VITE_NETLIFY_SITE_ID 
+      });
       await store.setJSON("data", data);
     } catch (err) {
       error.value = err instanceof Error ? err.message : "Failed to save data";
@@ -30,7 +33,10 @@ export function useMedicineData() {
     error.value = null;
 
     try {
-      const store = getStore("medicine-data");
+      const store = getStore({ 
+        name: "medicine-data",
+        siteID: import.meta.env.VITE_NETLIFY_SITE_ID 
+      });
       const data = await store.get("data", { type: "json" });
       return data as MedicineData | null;
     } catch (err) {
