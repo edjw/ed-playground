@@ -8,7 +8,14 @@ import netlify from "@netlify/vite-plugin";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools(), tailwindcss(), netlify()],
+  plugins: [
+    vue(),
+    vueDevTools(),
+    tailwindcss(),
+    netlify({
+      blobs: { enabled: true },
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
