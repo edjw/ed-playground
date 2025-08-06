@@ -18,6 +18,13 @@ const apps: PlaygroundApp[] = [
     route: "/medicine-tracker",
     icon: "💊",
   },
+  {
+    id: "anagram-finder",
+    name: "Anagram Finder",
+    description: "Drag letters to discover anagrams",
+    route: "/anagram-finder",
+    icon: "🔤",
+  },
 ];
 </script>
 
@@ -44,7 +51,7 @@ const apps: PlaygroundApp[] = [
       </div>
 
       <div class="mt-12 text-center text-sm text-gray-500">
-        <p>More apps coming soon...</p>
+        <p>More apps coming soon!</p>
       </div>
     </div>
   </AppLayout>

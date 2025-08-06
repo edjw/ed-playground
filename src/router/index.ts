@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import AnagramFinderView from "../views/AnagramFinderView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,12 @@ const router = createRouter({
       name: "medicine-tracker",
       component: () => import("../views/MedicineTrackerView.vue"),
       meta: { title: "Medicine Tracker" },
+    },
+    {
+      path: "/anagram-finder",
+      name: "anagram-finder",
+      component: AnagramFinderView,
+      meta: { title: "Anagram Finder" },
     },
   ],
 });
