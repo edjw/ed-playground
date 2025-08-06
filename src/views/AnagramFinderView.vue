@@ -22,7 +22,7 @@ const letters = ref<Letter[]>([]);
 const dragContainer = ref<HTMLElement>();
 
 const initializeLetters = () => {
-	const chars = word.value.toUpperCase().split("");
+	const chars = word.value.split("").filter(char => /[a-zA-Z]/.test(char)).map(char => char.toUpperCase());
 	
 	nextTick(() => {
 		const containerWidth = dragContainer.value?.clientWidth || 300;
