@@ -24,22 +24,36 @@ const dragContainer = ref<HTMLElement>();
 const initializeLetters = () => {
 	const chars = word.value.toUpperCase().split("");
 	
-	letters.value = chars.map((char, index) => ({
-		id: `letter-${index}-${Date.now()}`,
-		char,
-		originalIndex: index,
-		x: index * 70 + 20,
-		y: 100,
-		isDragging: false,
-		dragOffset: { x: 0, y: 0 }
-	}));
+	nextTick(() => {
+		const containerWidth = dragContainer.value?.clientWidth || 300;
+		const letterSize = 70; // 60px + margin
+		const lettersPerRow = Math.floor((containerWidth - 40) / letterSize);
+		
+		letters.value = chars.map((char, index) => {
+			const row = Math.floor(index / lettersPerRow);
+			const col = index % lettersPerRow;
+			
+			return {
+				id: `letter-${index}-${Date.now()}`,
+				char,
+				originalIndex: index,
+				x: col * letterSize + 20,
+				y: row * letterSize + 50,
+				isDragging: false,
+				dragOffset: { x: 0, y: 0 }
+			};
+		});
+	});
 };
 
 const shuffleLetters = () => {
-	const containerWidth = 500;
-	const containerHeight = 300;
+	if (!dragContainer.value) return;
+	
+	const containerWidth = dragContainer.value.clientWidth;
+	const containerHeight = dragContainer.value.clientHeight;
 	const letterSize = 60; // 56px + some padding
 	const minDistance = 70; // Minimum distance between letter centers
+	const margin = 10; // Margin from edges
 	
 	const occupiedPositions: { x: number; y: number }[] = [];
 	
@@ -51,8 +65,8 @@ const shuffleLetters = () => {
 		
 		// Try to find a non-overlapping position
 		while (!validPosition && attempts < 50) {
-			newX = Math.random() * (containerWidth - letterSize);
-			newY = Math.random() * (containerHeight - letterSize) + 20;
+			newX = Math.random() * (containerWidth - letterSize - margin * 2) + margin;
+			newY = Math.random() * (containerHeight - letterSize - margin * 2) + margin;
 			
 			// Check if this position overlaps with any existing letters
 			const overlaps = occupiedPositions.some(pos => {
@@ -77,45 +91,89 @@ const shuffleLetters = () => {
 };
 
 const resetLetters = () => {
+	if (!dragContainer.value) return;
+	
+	const containerWidth = dragContainer.value.clientWidth;
+	const letterSize = 70;
+	const lettersPerRow = Math.floor((containerWidth - 40) / letterSize);
+	
 	letters.value.forEach((letter) => {
-		letter.x = letter.originalIndex * 70 + 20;
-		letter.y = 100;
+		const row = Math.floor(letter.originalIndex / lettersPerRow);
+		const col = letter.originalIndex % lettersPerRow;
+		
+		letter.x = col * letterSize + 20;
+		letter.y = row * letterSize + 50;
 	});
 };
 
 const handleMouseDown = (event: MouseEvent, letter: Letter) => {
 	event.preventDefault();
-	const rect = dragContainer.value?.getBoundingClientRect();
-	if (!rect) return;
-	
-	letter.isDragging = true;
-	letter.dragOffset.x = event.clientX - rect.left - letter.x;
-	letter.dragOffset.y = event.clientY - rect.top - letter.y;
+	startDrag(event.clientX, event.clientY, letter);
 	
 	document.addEventListener('mousemove', handleMouseMove);
 	document.addEventListener('mouseup', handleMouseUp);
 };
 
+const handleTouchStart = (event: TouchEvent, letter: Letter) => {
+	event.preventDefault();
+	const touch = event.touches[0];
+	startDrag(touch.clientX, touch.clientY, letter);
+	
+	document.addEventListener('touchmove', handleTouchMove, { passive: false });
+	document.addEventListener('touchend', handleTouchEnd);
+};
+
+const startDrag = (clientX: number, clientY: number, letter: Letter) => {
+	const rect = dragContainer.value?.getBoundingClientRect();
+	if (!rect) return;
+	
+	letter.isDragging = true;
+	letter.dragOffset.x = clientX - rect.left - letter.x;
+	letter.dragOffset.y = clientY - rect.top - letter.y;
+};
+
 const handleMouseMove = (event: MouseEvent) => {
+	updateDragPosition(event.clientX, event.clientY);
+};
+
+const handleTouchMove = (event: TouchEvent) => {
+	event.preventDefault();
+	const touch = event.touches[0];
+	updateDragPosition(touch.clientX, touch.clientY);
+};
+
+const updateDragPosition = (clientX: number, clientY: number) => {
 	const draggingLetter = letters.value.find(l => l.isDragging);
 	if (!draggingLetter || !dragContainer.value) return;
 	
 	const rect = dragContainer.value.getBoundingClientRect();
-	const newX = event.clientX - rect.left - draggingLetter.dragOffset.x;
-	const newY = event.clientY - rect.top - draggingLetter.dragOffset.y;
+	const newX = clientX - rect.left - draggingLetter.dragOffset.x;
+	const newY = clientY - rect.top - draggingLetter.dragOffset.y;
 	
-	// Keep within bounds
-	draggingLetter.x = Math.max(0, Math.min(newX, rect.width - 60));
-	draggingLetter.y = Math.max(0, Math.min(newY, rect.height - 60));
+	const letterSize = 56; // Actual letter element size
+	const margin = 5; // Small margin from edges
+	
+	// Keep within bounds with proper margin
+	draggingLetter.x = Math.max(margin, Math.min(newX, rect.width - letterSize - margin));
+	draggingLetter.y = Math.max(margin, Math.min(newY, rect.height - letterSize - margin));
 };
 
 const handleMouseUp = () => {
+	endDrag();
+	document.removeEventListener('mousemove', handleMouseMove);
+	document.removeEventListener('mouseup', handleMouseUp);
+};
+
+const handleTouchEnd = () => {
+	endDrag();
+	document.removeEventListener('touchmove', handleTouchMove);
+	document.removeEventListener('touchend', handleTouchEnd);
+};
+
+const endDrag = () => {
 	letters.value.forEach(letter => {
 		letter.isDragging = false;
 	});
-	
-	document.removeEventListener('mousemove', handleMouseMove);
-	document.removeEventListener('mouseup', handleMouseUp);
 };
 
 const handleSubmit = () => {
@@ -195,6 +253,7 @@ const getLetterStyle = (letter: Letter) => {
 								:style="getLetterStyle(letter)"
 								class="absolute cursor-grab active:cursor-grabbing transition-transform duration-100"
 								@mousedown="handleMouseDown($event, letter)"
+								@touchstart="handleTouchStart($event, letter)"
 							>
 								<div 
 									class="w-14 h-14 bg-white border-2 border-gray-400 rounded-lg shadow-md flex items-center justify-center hover:shadow-lg transition-all hover:border-blue-400"
