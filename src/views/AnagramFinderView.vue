@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Shuffle, RotateCcw } from "lucide-vue-next";
+import { Shuffle, X } from "lucide-vue-next";
 
 interface Letter {
 	id: string;
@@ -20,6 +20,7 @@ interface Letter {
 const word = ref("");
 const letters = ref<Letter[]>([]);
 const dragContainer = ref<HTMLElement>();
+const wordInput = ref<HTMLInputElement>();
 
 const initializeLetters = () => {
 	const chars = word.value.split("").filter(char => /[a-zA-Z]/.test(char)).map(char => char.toUpperCase());
@@ -90,21 +91,6 @@ const shuffleLetters = () => {
 	});
 };
 
-const resetLetters = () => {
-	if (!dragContainer.value) return;
-	
-	const containerWidth = dragContainer.value.clientWidth;
-	const letterSize = 70;
-	const lettersPerRow = Math.floor((containerWidth - 40) / letterSize);
-	
-	letters.value.forEach((letter) => {
-		const row = Math.floor(letter.originalIndex / lettersPerRow);
-		const col = letter.originalIndex % lettersPerRow;
-		
-		letter.x = col * letterSize + 20;
-		letter.y = row * letterSize + 50;
-	});
-};
 
 const handleMouseDown = (event: MouseEvent, letter: Letter) => {
 	event.preventDefault();
@@ -182,6 +168,17 @@ const handleSubmit = () => {
 	}
 };
 
+const clearAll = () => {
+	word.value = "";
+	letters.value = [];
+	nextTick(() => {
+		const input = wordInput.value?.$el || wordInput.value;
+		if (input) {
+			input.focus();
+		}
+	});
+};
+
 const getLetterStyle = (letter: Letter) => {
 	return {
 		left: `${letter.x}px`,
@@ -208,11 +205,13 @@ const getLetterStyle = (letter: Letter) => {
 						<Label for="word-input">Enter a word</Label>
 						<div class="flex gap-2">
 							<Input
+								ref="wordInput"
 								id="word-input"
 								v-model="word"
 								placeholder="Type a word..."
 								@keyup.enter="handleSubmit"
 								class="max-w-xs"
+								autofocus
 							/>
 							<Button @click="handleSubmit">
 								Set Word
@@ -233,12 +232,12 @@ const getLetterStyle = (letter: Letter) => {
 								Shuffle
 							</Button>
 							<Button
-								@click="resetLetters"
+								@click="clearAll"
 								variant="outline"
 								size="sm"
 							>
-								<RotateCcw class="w-4 h-4 mr-2" />
-								Reset
+								<X class="w-4 h-4 mr-2" />
+								Clear
 							</Button>
 						</div>
 						
