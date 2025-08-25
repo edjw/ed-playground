@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onMounted } from "vue";
 import AppLayout from "@/components/AppLayout.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -187,6 +187,15 @@ const getLetterStyle = (letter: Letter) => {
 		transform: letter.isDragging ? 'scale(1.05)' : 'scale(1)',
 	};
 };
+
+onMounted(() => {
+	nextTick(() => {
+		const input = wordInput.value?.$el || wordInput.value;
+		if (input) {
+			input.focus();
+		}
+	});
+});
 </script>
 
 <template>
@@ -211,7 +220,6 @@ const getLetterStyle = (letter: Letter) => {
 								placeholder="Type a word..."
 								@keyup.enter="handleSubmit"
 								class="max-w-xs"
-								autofocus
 							/>
 							<Button @click="handleSubmit">
 								Set Word
