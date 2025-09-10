@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:netlify": "netlify dev",
+    "dev:netlify": "pnpm --package=netlify-cli dlx netlify dev",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
