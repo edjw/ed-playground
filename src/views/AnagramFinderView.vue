@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted } from "vue";
+import { ref, computed, nextTick, onMounted } from "vue";
 import AppLayout from "@/components/AppLayout.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,11 @@ const word = ref("");
 const letters = ref<Letter[]>([]);
 const dragContainer = ref<HTMLElement>();
 const wordInput = ref<HTMLInputElement>();
+
+const characterCount = computed(() => {
+	const count = word.value.replace(/[^a-zA-Z]/g, "").length;
+	return count === 1 ? "1 letter" : `${count} letters`;
+});
 
 const initializeLetters = () => {
 	const chars = word.value.split("").filter(char => /[a-zA-Z]/.test(char)).map(char => char.toUpperCase());
@@ -211,7 +216,10 @@ onMounted(() => {
 				<CardContent class="space-y-6">
 					<!-- Word Input -->
 					<div class="space-y-2">
-						<Label for="word-input">Enter a word</Label>
+						<div class="flex items-center gap-2">
+							<Label for="word-input">Enter a word</Label>
+							<span class="text-sm text-gray-500 tabular-nums">{{ characterCount }}</span>
+						</div>
 						<div class="flex gap-2">
 							<Input
 								ref="wordInput"
