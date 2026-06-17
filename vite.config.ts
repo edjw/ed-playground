@@ -14,6 +14,11 @@ export default defineConfig({
     tailwindcss(),
     netlify({
       blobs: { enabled: true },
+      // Netlify static middleware sets .ts files to video/mp2t (MPEG transport
+      // stream), which blocks module scripts in the browser. Vite still serves
+      // and transforms /src/*; use `pnpm dev:netlify` when you need full Netlify
+      // request emulation (blobs, functions, redirects).
+      middleware: false,
     }),
   ],
   resolve: {
